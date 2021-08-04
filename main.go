@@ -114,7 +114,16 @@ func main() {
 
 	// send each line of text to urls
 	for sc.Scan() {
-		urls <- sc.Text()
+
+		url := sc.Text()
+
+		// check if the subdomain is prefixed correctly
+		if !strings.HasPrefix(sc.Text(), "http") {
+			url = "http://" + url
+		}
+
+		urls <- url
+
 	}
 
 	// once all urls are sent, close the channel
