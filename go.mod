@@ -1,3 +1,3 @@
-module goarl
+module github.com/cybercdh/goarl
 
-go 1.16
+go 1.17
